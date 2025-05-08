@@ -13,7 +13,6 @@ class BankService:
     def __init__(self):
         self.currencyService = CurrencyService()
         self.banks = BankManager.getBanks()
-        print(self.banks)
 
     @classmethod
     def setCurrentBankById(cls, bankId: str):
