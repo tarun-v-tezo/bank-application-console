@@ -1,17 +1,18 @@
-from common.constants import ActionNames, Constants, TransactionType
+from common.constants import ActionNames, Constants, TransactionType, UserRoles
 from models.NewTransactionRequest import NewTransactionRequest
 from views.roleView import RoleView
 
 
 class AccountHolderView(RoleView):
     def __init__(self):
-        super().__init__()
+        super().__init__(UserRoles.ACCOUNT_HOLDER)
         self.actionFunctionMapping.update({
             ActionNames.DEPOSIT_MONEY: self.depositMoney,
             ActionNames.WITHDRAW_MONEY: self.withdrawMoney,
             ActionNames.TRANSFER_MONEY: self.transferMoney(),
             ActionNames.VIEW_TRANSACTION_HISTORY: self.viewTransactionHistory()
         })
+        self.glb_currentAccount = None
         self.__setCurrentAccount()
         
     

@@ -1,4 +1,4 @@
-from common.constants import ActionNames
+from common.constants import ActionNames, UserRoles
 from models.NewAccountRequest import NewAccountRequest
 from models.NewCurrencyRequest import NewCurrencyRequest
 from models.NewUserRequest import NewUserRequest
@@ -6,7 +6,7 @@ from .roleView import RoleView
 
 class EmployeeView(RoleView):
     def __init__(self):
-        super().__init__()
+        super().__init__(UserRoles.EMPLOYEE)
         self.actionFunctionMapping.update({
             ActionNames.CREATE_NEW_ACCOUNT: self.createAccount,
             ActionNames.EDIT_ACCOUNT: self.editAccount,
@@ -157,4 +157,31 @@ class EmployeeView(RoleView):
     def revertTransaction(self):
         transactionId = input("Enter transaction ID to revert: ")
         resp = self.accountService.revertTransaction(transactionId)
+        print(resp)
+
+    def addServiceChargeSameBank(self):
+        bankId = self.glb_currentBank.id if self.glb_currentBank is not None else None
+        if bankId is None:
+            bankId = input("Enter bank Id: ")
+        
+        print("Current service charges:")
+        print(f"RTGS: {self.glb_currentBank.rtgs}")
+        print(f"IMPS: {self.glb_currentBank.imps}")
+        
+        requiredDetails = {
+            "rtgs": "Enter new RTGS service charge: ",
+            "imps": "Enter new IMPS service charge: ",
+        }
+        serviceCharges = {}
+        for key, prompt in requiredDetails.items():
+            while True:
+                value = input(prompt)
+                serviceCharges[key] = float(value) if value else None
+                
+                if serviceCharges[key] < 0:
+                    print(f"Service charge for {key} cannot be negative.")
+                else:
+                    break
+            
+        resp = self.bankService.updateServiceCharges(bankId, serviceCharges)
         print(resp)

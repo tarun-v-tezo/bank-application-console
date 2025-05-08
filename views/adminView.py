@@ -6,7 +6,7 @@ from views.roleView import RoleView
 
 class AdminView(RoleView):
     def __init__(self):
-        super().__init__()
+        super().__init__(UserRoles.ADMIN)
         self.actionFunctionMapping.update({
             ActionNames.ADD_NEW_USER: self.createUser,
             ActionNames.REMOVE_USER: self.removeUser,

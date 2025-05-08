@@ -7,7 +7,7 @@ from util.helper import getActionChoiceForRole
 
 
 class RoleView:
-    def __init__(self):
+    def __init__(self, roleId: UserRoles):
         self.actionFunctionMapping = {
             ActionNames.CREATE_NEW_ACCOUNT: self.featureNotImplemented,
             ActionNames.EDIT_ACCOUNT: self.featureNotImplemented,
@@ -33,6 +33,7 @@ class RoleView:
         self.currencyService = CurrencyService()
         self.glb_currentUser = UsersService.currentUser
         self.glb_currentBank = BankService.currentBank
+        self.roleId = roleId
     
     def featureNotImplemented(self):
         print("Feature not available! Please select another option.")
@@ -43,7 +44,7 @@ class RoleView:
 
     def showMenu(self):
         while True:
-            selectedAction = getActionChoiceForRole(UserRoles.EMPLOYEE)
+            selectedAction = getActionChoiceForRole(self.roleId)
             if not selectedAction:
                 break
             assignedFunction = self.actionFunctionMapping.get(selectedAction['action'])
