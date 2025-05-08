@@ -1,4 +1,4 @@
-from models.User import User
+from models.UserRoleAssignment import UserRoleAssignment
 from ..database import Database
 from common.constants import DataKeys
 
@@ -8,7 +8,7 @@ class UserRoleAssignmentManager:
 
     @classmethod
     def initialize(cls):
-        cls.__userRoleAssignments = [User(**assignment) for assignment in Database.getData(DataKeys.USERROLEASSIGNMENTS)]
+        cls.__userRoleAssignments = [UserRoleAssignment(**assignment) for assignment in Database.getData(DataKeys.USERROLEASSIGNMENTS)]
 
     @classmethod
     def getUsers(cls):
