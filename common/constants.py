@@ -83,7 +83,7 @@ class Constants:
         },
         {
             "roleName": "Account Holder",
-            "roleId": UserRoles.ACCOUNT_HOLDER,
+            "roleId": UserRoles.ADMIN,
             "actions": [
                 {"action": ActionNames.ADD_NEW_USER, "title": "Add a new user", "initialMessage": "Adding new user..."},
                 {"action": ActionNames.REMOVE_USER, "title": "Remove a user", "initialMessage": "Removing user..."},
