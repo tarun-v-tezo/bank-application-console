@@ -1,6 +1,6 @@
 from datetime import datetime
-from common.constants import Constants, DataKeys
-from data.database import Database
+from common.constants import Constants
+from data.managers.bankManager import BankManager
 from models.Bank import Bank
 from models.NewBankRequest import NewBankRequest
 from models.NewCurrencyRequest import NewCurrencyRequest
@@ -11,7 +11,7 @@ class BankService:
     currentBank: Bank = None
     def __init__(self):
         self.currencyService = CurrencyService()
-        self.banks = Database.banks
+        self.banks = BankManager.getBanks()
 
     @classmethod
     def setCurrentBankById(cls, bankId: str):
@@ -59,7 +59,7 @@ class BankService:
             print(f"Currency {currencyCode} already accepted by bank {bank.name}.")
             return
         bank.acceptedCurrencyIds.append(newCurrency.id)
-        Database.setData("banks", self.banks)
+        BankManager.setBanks(self.banks)
         return bank.acceptedCurrencyIds
     
     def addNewAcceptedCurrencyToBank(self, bankId: str, newCurrency: NewCurrencyRequest):
@@ -72,7 +72,7 @@ class BankService:
             print("Failed to add new accepted currency.")
             return
         bank.acceptedCurrencyIds.append(newAcceptedCurrency.id)
-        Database.setData("banks", self.banks)
+        BankManager.setBanks(self.banks)
         return bank.acceptedCurrencyIds
     
     def isCurrencyAcceptedByBank(self, bankId: str, currencyCode: str):
@@ -102,7 +102,7 @@ class BankService:
             oimps=bank.oimps if bank.oimps else 0.0
         )
         self.banks.append(newBank)
-        Database.setData(DataKeys.BANKS, self.banks)
+        BankManager.setBanks(self.banks)
 
         return bank
     
@@ -110,7 +110,7 @@ class BankService:
         for i,bank in enumerate(self.banks):
             if bank.name == bankName:
                 self.banks.pop(i)
-                Database.setData(DataKeys.BANKS, self.banks)
+                BankManager.setBanks(self.banks)
                 return True
         return False
     

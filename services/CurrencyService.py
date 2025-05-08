@@ -1,12 +1,11 @@
-from common.constants import DataKeys
-from data.database import Database
+from data.managers.acceptedCurrencyManager import AcceptedCurrencyManager
 from models.AcceptedCurrency import AcceptedCurrency
 from models.NewCurrencyRequest import NewCurrencyRequest
 
 
 class CurrencyService:
     def __init__(self):
-        self.acceptedCurrencies = Database.acceptedCurrencies
+        self.acceptedCurrencies = AcceptedCurrencyManager.getAcceptedCurrencies()
 
     def getAcceptedCurrencyByCode(self, currencyCode):
         for currency in self.acceptedCurrencies:
@@ -38,7 +37,7 @@ class CurrencyService:
             exchangeRate=newCurrency.exchangeRate,
         )
         self.acceptedCurrencies.append(newAcceptedCurrency)
-        Database.setData(DataKeys.ACCEPTEDCURRENCIES, self.acceptedCurrencies)
+        AcceptedCurrencyManager.setAcceptedCurrencies(self.acceptedCurrencies)
         return newAcceptedCurrency
     
     def convertCurrency(self, amount: float, fromCurrencyId: str, toCurrencyId: str) -> float:

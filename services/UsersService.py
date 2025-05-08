@@ -1,5 +1,6 @@
-from common.constants import DataKeys
-from data.database import Database
+from data.managers.roleManager import RoleManager
+from data.managers.userManager import UserManager
+from data.managers.userRoleAssignmentManager import UserRoleAssignmentManager
 from models.NewUserRequest import NewUserRequest
 from models.Roles import Role
 from models.User import User
@@ -8,9 +9,9 @@ from models.UserRoleAssignment import UserRoleAssignment
 class UsersService:
     currentUser: User = None
     def __init__(self):
-        self.users = Database.users
-        self.userRoleAssignments = Database.userRoleAssignments
-        self.roles = Database.roles
+        self.users = UserManager.getUsers()
+        self.userRoleAssignments = UserRoleAssignmentManager.getUsers()
+        self.roles = RoleManager.getRoles()
 
     def getUser(self, username: str):
         for user in self.users:
@@ -42,7 +43,7 @@ class UsersService:
             print(f"User with username {user.username} already exists.")
             return None
         self.users.append(user)
-        Database.setData("users", self.users)
+        UserManager.setUsers(self.users)
         return user
     
     def validateUser(self, username: str, password: str) -> bool:
@@ -79,7 +80,7 @@ class UsersService:
             bankId=bankId
         )
         self.userRoleAssignments.append(newAssignment)
-        Database.setData(DataKeys.USERROLEASSIGNMENTS, self.userRoleAssignments)
+        UserRoleAssignmentManager.setUsers(self.userRoleAssignments)
         return True
     
     def __getRolesWithBanksByUserId(self, userId: int):
@@ -117,6 +118,6 @@ class UsersService:
         for i,user in enumerate(self.users):
             if user.username == username:
                 self.users.pop(i)
-            Database.setData(DataKeys.USERS, self.users)
+            UserManager.setUsers(self.users)
             return True 
         return False

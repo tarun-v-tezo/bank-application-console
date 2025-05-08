@@ -1,6 +1,7 @@
 from datetime import datetime
-from common.constants import DataKeys, TransactionType, UserRoles
-from data.database import Database
+from common.constants import TransactionType, UserRoles
+from data.managers.accountManager import AccountManager
+from data.managers.transactionManager import TransactionManager
 from models.Account import Account
 from models.EditAccountRequest import EditAccountRequest
 from models.NewAccountRequest import NewAccountRequest
@@ -13,8 +14,8 @@ class AccountService:
     def __init__(self):
         self.usersService = UsersService()
         self.bankService = BankService()
-        self.bankAccounts = Database.bankAccounts
-        self.transactions = Database.transactions
+        self.bankAccounts = AccountManager.getBankAccounts()
+        self.transactions = TransactionManager.getTransactions()
 
     def getBankAccount(self, accountId: str):
         for account in self.bankAccounts:
@@ -65,7 +66,7 @@ class AccountService:
 
         # Add the new account to the bankAccounts list
         self.bankAccounts.append(newAccount)
-        Database.setData(DataKeys.BANK_ACCOUNTS, self.bankAccounts)
+        AccountManager.setBankAccounts(self.bankAccounts)
 
         if accountDetails.initialDeposit > 0:
             # Create a new transaction for the initial deposit
@@ -95,7 +96,7 @@ class AccountService:
                 # Update the account details
                 for key, value in newDetails.items():
                     setattr(account, key, value)
-                Database.setData(DataKeys.BANK_ACCOUNTS, self.bankAccounts)
+                AccountManager.setBankAccounts(self.bankAccounts)
                 print(f"Account {accountNumber} updated successfully.")
                 return account
         print(f"Account {accountNumber} not found.")
@@ -107,7 +108,7 @@ class AccountService:
             if account.id == accountNumber:
                 # Remove the account from the list
                 self.bankAccounts.remove(account)
-                Database.setData(DataKeys.BANK_ACCOUNTS, self.bankAccounts)
+                AccountManager.setBankAccounts(self.bankAccounts)
                 print(f"Account {accountNumber} deleted successfully.")
                 return True
         print(f"Account {accountNumber} not found.")
@@ -196,7 +197,7 @@ class AccountService:
 
         # Add the new transaction to the transactions list
         self.transactions.append(newTransaction)
-        Database.setData(DataKeys.TRANSACTIONS, self.transactions)
+        TransactionManager.setTransactions(self.transactions)
 
         print(f"Transaction {newTransaction.id} added successfully.")
         return newTransaction
@@ -238,7 +239,7 @@ class AccountService:
                         self.transactions[i] = transaction
                         break
                 # Save the updated transactions list to the database
-                Database.setData(DataKeys.TRANSACTIONS, self.transactions)
+                TransactionManager.setTransactions(self.transactions)
                 print(f"Transaction {transactionId} reverted successfully.")
                 return True
         print(f"Transaction {transactionId} not found.")
