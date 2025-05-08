@@ -4,6 +4,7 @@ from data.managers.bankManager import BankManager
 from models.Bank import Bank
 from models.NewBankRequest import NewBankRequest
 from models.NewCurrencyRequest import NewCurrencyRequest
+from models.UpdateChargeRequest import UpdateChargeRequest
 from services.CurrencyService import CurrencyService
 
 
@@ -12,6 +13,7 @@ class BankService:
     def __init__(self):
         self.currencyService = CurrencyService()
         self.banks = BankManager.getBanks()
+        print(self.banks)
 
     @classmethod
     def setCurrentBankById(cls, bankId: str):
@@ -88,6 +90,23 @@ class BankService:
             return True
         return False
     
+    def updateServiceCharges(self, updateChargeRequest: UpdateChargeRequest):
+        bank = self.getBankById(updateChargeRequest.bankId)
+        if bank is None:
+            print(f"Bank with Id {updateChargeRequest.bankId} not found.")
+            return
+        if updateChargeRequest.rtgs is not None:
+            bank.rtgs = updateChargeRequest.rtgs
+        if updateChargeRequest.imps is not None:
+            bank.imps = updateChargeRequest.imps
+        if updateChargeRequest.ortgs is not None:
+            bank.ortgs = updateChargeRequest.ortgs
+        if updateChargeRequest.oimps is not None:
+            bank.oimps = updateChargeRequest.oimps
+        
+        BankManager.setBanks(self.banks)
+        return bank
+    
     def addBank(self, bank: NewBankRequest):
         if self.getBankByName(bank.name) is not None:
             print(f"Bank with name {bank.name} already exists.")
@@ -96,10 +115,10 @@ class BankService:
             id=f"{bank.name[:3]}{datetime.now().strftime('%Y%m%d')}",  # need to implement a better way to get the id
             name=bank.name,
             acceptedCurrencyIds= self.__addDefaultCurrencyToList(bank.acceptedCurrencyIds if bank.acceptedCurrencyIds else []),
-            rtgs=bank.rtgs if bank.rtgs else 0.0,
-            imps=bank.imps if bank.imps else 0.0,
-            ortgs=bank.ortgs if bank.ortgs else 0.0,
-            oimps=bank.oimps if bank.oimps else 0.0
+            rtgs=bank.rtgs if bank.rtgs else Constants.DefaultRTGS,
+            imps=bank.imps if bank.imps else Constants.DefaultIMPS,
+            ortgs=bank.ortgs if bank.ortgs else Constants.DefaultORTGS,
+            oimps=bank.oimps if bank.oimps else Constants.DefaultOIMPS
         )
         self.banks.append(newBank)
         BankManager.setBanks(self.banks)

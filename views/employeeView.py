@@ -2,6 +2,7 @@ from common.constants import ActionNames, UserRoles
 from models.NewAccountRequest import NewAccountRequest
 from models.NewCurrencyRequest import NewCurrencyRequest
 from models.NewUserRequest import NewUserRequest
+from models.UpdateChargeRequest import UpdateChargeRequest
 from .roleView import RoleView
 
 class EmployeeView(RoleView):
@@ -13,11 +14,21 @@ class EmployeeView(RoleView):
             ActionNames.DELETE_ACCOUNT: self.deleteAccount,
             ActionNames.ADD_NEW_ACCEPTED_CURRENCY: self.addAcceptedCurrency,
             ActionNames.VIEW_ACCOUNT_TRANSACTIONS: self.viewAccountTransactions,
-            ActionNames.REVERT_TRANSACTION: self.revertTransaction
+            ActionNames.REVERT_TRANSACTION: self.revertTransaction,
+            ActionNames.ADD_SERVICE_CHARGE_SAME_BANK: self.addServiceChargeSameBank,
+            ActionNames.ADD_SERVICE_CHARGE_OTHER_BANK: self.featureNotImplemented,
         })
         
+    def checkBankAssociation(self):
+        if self.glb_currentBank is None or self.glb_currentBank.id is None:
+            print("You are not associated with any bank.")
+            return False
+        return True
 
     def createAccount(self):
+        checkBankAssociation = self.checkBankAssociation()
+        if not checkBankAssociation:
+            return
         # Step 1: Ask for username and validate
         while True:
             username = input("Enter username: ")
@@ -55,8 +66,9 @@ class EmployeeView(RoleView):
                 break
 
         # Step 3: Ask for account details
+        bankId = self.glb_currentBank.id if self.glb_currentBank is not None else None
+        
         requiredAccountDetails = {
-            "bankId": "Enter bank Id: ",
             "accountType": "Enter account type: ",
             "initialDeposit": "Enter initial deposit amount: ",
         }
@@ -65,6 +77,7 @@ class EmployeeView(RoleView):
         for key, prompt in requiredAccountDetails.items():
             value = input(prompt)
             accountDetails[key] = value
+        accountDetails["bankId"] = bankId
         accountDetails["initialDeposit"] = float(accountDetails["initialDeposit"]) if accountDetails["initialDeposit"] else 0.0
 
         # Step 4: Create the account
@@ -108,9 +121,10 @@ class EmployeeView(RoleView):
             print(f"No transactions found for account {accountNumber}.")
     
     def addAcceptedCurrency(self):
-        bankId = self.glb_currentBank.id if self.glb_currentBank is not None else None
-        if bankId is None:
-            bankId = input("Enter bank Id: ")
+        checkBankAssociation = self.checkBankAssociation()
+        if not checkBankAssociation:
+            return
+        bankId = self.glb_currentBank.id
         useExisting = 'no'
         currencyCode = None
         while True:
@@ -160,9 +174,10 @@ class EmployeeView(RoleView):
         print(resp)
 
     def addServiceChargeSameBank(self):
-        bankId = self.glb_currentBank.id if self.glb_currentBank is not None else None
-        if bankId is None:
-            bankId = input("Enter bank Id: ")
+        checkBankAssociation = self.checkBankAssociation()
+        if not checkBankAssociation:
+            return
+        bankId = self.glb_currentBank.id
         
         print("Current service charges:")
         print(f"RTGS: {self.glb_currentBank.rtgs}")
@@ -182,6 +197,41 @@ class EmployeeView(RoleView):
                     print(f"Service charge for {key} cannot be negative.")
                 else:
                     break
+        updateChargeRequest = UpdateChargeRequest(
+            bankId=bankId,
+            **serviceCharges
+        )
+        resp = self.bankService.updateServiceCharges(updateChargeRequest)
+        print(resp)
+
+    def addServiceChargeOtherBank(self):
+        checkBankAssociation = self.checkBankAssociation()
+        if not checkBankAssociation:
+            return
+        bankId = self.glb_currentBank.id
+        
+        print("Current service charges:")
+        print(f"RTGS: {self.glb_currentBank.ortgs}")
+        print(f"IMPS: {self.glb_currentBank.oimps}")
+        
+        requiredDetails = {
+            "ortgs": "Enter new RTGS service charge: ",
+            "oimps": "Enter new IMPS service charge: ",
+        }
+        serviceCharges = {}
+        for key, prompt in requiredDetails.items():
+            while True:
+                value = input(prompt)
+                serviceCharges[key] = float(value) if value else None
+                
+                if serviceCharges[key] < 0:
+                    print(f"Service charge for {key} cannot be negative.")
+                else:
+                    break
             
-        resp = self.bankService.updateServiceCharges(bankId, serviceCharges)
+        updateChargeRequest = UpdateChargeRequest(
+            bankId=bankId,
+            **serviceCharges
+        )
+        resp = self.bankService.updateServiceCharges(updateChargeRequest)
         print(resp)

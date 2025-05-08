@@ -54,6 +54,12 @@ class Constants:
     MaxWithdrawAmount = 50000.0
     MaxDepositAmount = 100000.0
     MinDepositAmount = 100.0
+
+    DefaultRTGS = 0.0
+    DefaultIMPS = 0.05
+    DefaultORTGS = 0.02
+    DefaultOIMPS = 0.06
+
     EXIT_COMMAND = 'exit'
     RoleConfigurations = [
         {
