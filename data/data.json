@@ -1,0 +1,282 @@
+{
+    "banks": [
+        {
+            "id": "1",
+            "name": "Bank A",
+            "acceptedCurrencyIds": [
+                1,
+                3,
+                4
+            ],
+            "rtgs": 1.0,
+            "imps": 1.0,
+            "ortgs": 2.0,
+            "oimps": 2.0
+        },
+        {
+            "id": "2",
+            "name": "Bank B",
+            "acceptedCurrencyIds": [
+                3,
+                4
+            ],
+            "rtgs": 0.0,
+            "imps": 1.0,
+            "ortgs": 2.0,
+            "oimps": 1.5
+        }
+    ],
+    "accepted_currencies": [
+        {
+            "id": 1,
+            "currencyCode": "USD",
+            "currencyName": "United States Dollar",
+            "symbol": "$",
+            "exchangeRate": 1.0
+        },
+        {
+            "id": 2,
+            "currencyCode": "EUR",
+            "currencyName": "Euro",
+            "symbol": "\u00e2\u201a\u00ac",
+            "exchangeRate": 0.85
+        },
+        {
+            "id": 3,
+            "currencyCode": "INR",
+            "currencyName": "Indian Rupee",
+            "symbol": "\u00e2\u201a\u00b9",
+            "exchangeRate": 84.0
+        },
+        {
+            "id": 4,
+            "currencyCode": "KWD",
+            "currencyName": "Kuwaiti Dinar",
+            "symbol": "KD",
+            "exchangeRate": 3.26
+        }
+    ],
+    "bank_accounts": [
+        {
+            "id": "101",
+            "customerId": 1,
+            "bankId": "1",
+            "accountType": "Savings",
+            "balance": 1500.75
+        },
+        {
+            "id": "102",
+            "customerId": 2,
+            "bankId": "2",
+            "accountType": "Current",
+            "balance": 3000.0
+        },
+        {
+            "id": "Geo20250504",
+            "customerId": 3,
+            "bankId": "1",
+            "accountType": "Savings",
+            "balance": 100.0
+        },
+        {
+            "id": "Tar20250504",
+            "customerId": 1,
+            "bankId": "2",
+            "accountType": "Savings",
+            "balance": 0.0
+        },
+        {
+            "id": "Jai20250504",
+            "customerId": 4,
+            "bankId": "2",
+            "accountType": "Current",
+            "balance": 10.0
+        },
+        {
+            "id": "Jai20250504",
+            "customerId": 4,
+            "bankId": "1",
+            "accountType": "Savings",
+            "balance": 0.0
+        },
+        {
+            "id": "Nav20250505",
+            "customerId": 5,
+            "bankId": "2",
+            "accountType": "Savings",
+            "balance": 100000.0
+        }
+    ],
+    "roles": [
+        {
+            "id": 1,
+            "roleName": "Employee"
+        },
+        {
+            "id": 2,
+            "roleName": "Customer"
+        },
+        {
+            "id": 3,
+            "roleName": "Admin"
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "Tarun Veerabrahma",
+            "username": "tarun",
+            "password": "password123"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "username": "janesmith",
+            "password": "password456"
+        },
+        {
+            "id": 3,
+            "name": "George",
+            "username": "geek",
+            "password": "geek123"
+        },
+        {
+            "id": 4,
+            "name": "Jai",
+            "username": "guest1",
+            "password": "password1234"
+        },
+        {
+            "id": 5,
+            "name": "Naveen T",
+            "username": "naveen",
+            "password": "naveen123"
+        }
+    ],
+    "user_role_assignments": [
+        {
+            "id": 1,
+            "userId": 1,
+            "roleId": 1,
+            "bankId": "1"
+        },
+        {
+            "id": 2,
+            "userId": 2,
+            "roleId": 2,
+            "bankId": null
+        },
+        {
+            "id": 3,
+            "userId": 3,
+            "roleId": 2,
+            "bankId": "1"
+        },
+        {
+            "id": 4,
+            "userId": 1,
+            "roleId": 2,
+            "bankId": "2"
+        },
+        {
+            "id": 5,
+            "userId": 4,
+            "roleId": 2,
+            "bankId": "2"
+        },
+        {
+            "id": 6,
+            "userId": 5,
+            "roleId": 2,
+            "bankId": "2"
+        },
+        {
+            "id": 7,
+            "userId": 1,
+            "roleId": 3,
+            "bankId": null
+        }
+    ],
+    "transactions": [
+        {
+            "id": "T001",
+            "accountId": "101",
+            "amount": 500.0,
+            "currency": 1,
+            "transactionType": 3,
+            "transactionDate": "2025-04-30T10:30:00",
+            "status": "Completed",
+            "fromAccountId": "101",
+            "toAccountId": "102",
+            "fromBankId": "1",
+            "toBankId": "2",
+            "reverted": false,
+            "revertedDate": null,
+            "revertedBy": null
+        },
+        {
+            "id": "T002",
+            "accountId": "102",
+            "amount": 200.0,
+            "currency": 3,
+            "transactionType": 3,
+            "transactionDate": "2025-04-30T12:00:00",
+            "status": "Completed",
+            "fromAccountId": "102",
+            "toAccountId": "101",
+            "fromBankId": "2",
+            "toBankId": "1",
+            "reverted": false,
+            "revertedDate": null,
+            "revertedBy": null
+        },
+        {
+            "id": "TXN2Nav2025050520250505211238",
+            "accountId": "Nav20250505",
+            "amount": 100000.0,
+            "currency": 3,
+            "transactionType": 1,
+            "transactionDate": "2025-05-05 21:12:38",
+            "status": "COMPLETED",
+            "fromAccountId": null,
+            "toAccountId": null,
+            "fromBankId": null,
+            "toBankId": null,
+            "reverted": false,
+            "revertedDate": null,
+            "revertedBy": null
+        },
+        {
+            "id": "TXN2Nav2025050520250506130817",
+            "accountId": "Nav20250505",
+            "amount": 500.0,
+            "currency": 3,
+            "transactionType": 1,
+            "transactionDate": "2025-05-06 13:08:17",
+            "status": "COMPLETED",
+            "fromAccountId": null,
+            "toAccountId": null,
+            "fromBankId": null,
+            "toBankId": null,
+            "reverted": false,
+            "revertedDate": null,
+            "revertedBy": null
+        },
+        {
+            "id": "TXN2Nav2025050520250506131048",
+            "accountId": "Nav20250505",
+            "amount": 100.0,
+            "currency": 3,
+            "transactionType": 2,
+            "transactionDate": "2025-05-06 13:10:48",
+            "status": "COMPLETED",
+            "fromAccountId": null,
+            "toAccountId": null,
+            "fromBankId": null,
+            "toBankId": null,
+            "reverted": false,
+            "revertedDate": null,
+            "revertedBy": null
+        }
+    ]
+}
